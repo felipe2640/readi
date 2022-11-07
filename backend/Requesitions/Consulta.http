@@ -1,0 +1,19 @@
+### Variables 
+@apiurl = http://localhost:5678
+@contentType = application/json
+### GET users
+GET {{apiurl}}/Cars HTTP/1.1
+
+### POST Consulta credito
+POST {{apiurl}}/consulta HTTP/1.1
+Content-Type: {{contentType}}
+Authorization: Bearer ACCESS-TOKEN
+
+{
+        "Marca": "Renault",
+        "Modelo": "Sandeiro",
+        "Cor": "Branca",
+        "anoFabricacao": 2017,
+        "anoModelo": 2019,
+        "tipoCambio": "manual"
+      }

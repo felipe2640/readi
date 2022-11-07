@@ -1,12 +1,23 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { CarData } from "../components/FormCadastro";
 import Home from "../pages/index";
+
 const setFetchReturnData = (data: CarData[]) => {
   global.fetch = jest.fn(() =>
     Promise.resolve({
       json: () => Promise.resolve(data),
     })
   ) as jest.Mock;
+};
+
+const setup = () => {
+  const dom = render(<Home />);
+  const carros = dom.getByText(/carros/i);
+  fireEvent.click(carros);
+  return {
+    dom,
+  };
 };
 
 describe("General CoinList test", () => {
@@ -28,33 +39,70 @@ describe("General CoinList test", () => {
         anoModelo: 2019,
         tipoCambio: "manual",
       },
+      {
+        Marca: "Fiat",
+        Modelo: "Palio",
+        Cor: "Branca",
+        anoFabricacao: 2022,
+        anoModelo: 2022,
+        tipoCambio: "manual",
+      },
     ]);
   });
 
-  it("It should render API data", async () => {
-    render(<Home />);
-    const carros = screen.getByText(/carros/i);
-    fireEvent.click(carros);
-    await screen.findByText("Hyundai");
-    await screen.findByText("Honda");
+  it("Verificar se Renderizando os dados dos carros", async () => {
+    //Arrange
+    setup();
+    const data1 = await screen.findByText("Hyundai");
+    const data2 = await screen.findByText("Honda");
+
+    //Assert
+    expect(data1).toBeVisible();
+    expect(data2).toBeVisible();
   });
 
-  it("It should filter correctly", async () => {
-    render(<Home />);
-    const carros = screen.getByText(/carros/i);
-    fireEvent.click(carros);
-    await screen.getByLabelText(/Automático/i);
-    // fireEvent.click(filter);
+  it("Verificando se o filtro está separando carros automáticos e manuais", async () => {
+    //Arrange
+    const { dom } = setup();
+    const automatic = dom.getByTestId("automático");
 
-    // await screen.getByText("Hyundai");
+    //Act
+
+    fireEvent.click(automatic);
+
+    //Assert
+
+    const data = await screen.findByText("Exibindo 1 de 3");
+    expect(data).toBeVisible();
   });
 
-  it("It should render Button", async () => {
-    render(<Home />);
-    const carros = screen.getByText(/carros/i);
-    fireEvent.click(carros);
-    const clean = screen.getByText(/limpar/i);
+  it("Verificando os dois filtros está filtrando corretamente", async () => {
+    //Arrange
+    const { dom } = setup();
+    const manual = dom.getByTestId("manual");
+    const filterText = dom.getByPlaceholderText(/modelo do carro/i);
 
+    //Act
+
+    fireEvent.click(manual);
+    fireEvent.change(filterText, { target: { value: "Civic" } });
+
+    //Assert
+
+    const data = await screen.findByText("Exibindo 1 de 3");
+    expect(data).toBeVisible();
+  });
+  it("Verificando o botão de limpar os filtros", async () => {
+    //Arrange
+    const { dom } = setup();
+    const clean = dom.getByText(/limpar/i);
+
+    //Act
     fireEvent.click(clean);
+
+    //Assert
+
+    const data = await screen.findByText("Exibindo 3 de 3");
+    expect(data).toBeVisible();
   });
 });

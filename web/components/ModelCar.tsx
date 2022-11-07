@@ -20,21 +20,19 @@ const ModelCar = () => {
     "Tipo de Cambio",
   ];
   useEffect(() => {
-    fetch(`https://api.coingecko.com/api/v3/exchanges/?per_page=100&page=1`)
+    fetch(`http://localhost:5678/Cars`)
       .then((resp) => resp.json())
       .then(setData);
   }, []);
 
   useEffect(() => {
     if (data) {
-      const marca = filterText.marca;
-      const type = filterText.tipoCambio;
-
       setFilteredData(
         data.filter(
-          (item: CarData) =>
-            item.Marca.toLowerCase().includes(marca.toLowerCase()) &&
-            item.tipoCambio.includes(type)
+          (item: any) =>
+            item.Modelo.toLowerCase().includes(
+              filterText.marca.toLowerCase()
+            ) && item.tipoCambio.includes(filterText.tipoCambio)
         )
       );
     } else {
@@ -47,7 +45,8 @@ const ModelCar = () => {
       <div className="flex flex-col  items-stretch gap-4 w-full max-w-sm align-top ">
         <div>
           <TextInput.Text text="Filtro" required={false} />
-          <TextInput.Root className="bg-gray-100 ring-cyan-500">
+          <TextInput.Root className="bg-gray-00 ring-cyan-500">
+            <TextInput.Icon icon="ant-design:search-outlined" color="#4B5563" />
             <TextInput.Input
               placeholder="Digite o modelo do carro"
               onChange={(event: any) =>
@@ -61,6 +60,7 @@ const ModelCar = () => {
             <TextInput.Input
               type={"radio"}
               value={"automático"}
+              data-testid={"automático"}
               onChange={(event: any) =>
                 setFilterText({ ...filterText, tipoCambio: event.target.value })
               }
@@ -77,6 +77,7 @@ const ModelCar = () => {
             <TextInput.Input
               type={"radio"}
               value={"manual"}
+              data-testid={"manual"}
               onChange={(event: any) =>
                 setFilterText({ ...filterText, tipoCambio: event.target.value })
               }
@@ -125,8 +126,11 @@ const ModelCar = () => {
               })}
             </tr>
           </thead>
-          {data.map((item: CarData) => (
-            <tbody className="text-gray-600 bg-white justify-center">
+          {filteredData.map((item: CarData) => (
+            <tbody
+              key={item.carId}
+              className="text-gray-600 bg-white justify-center"
+            >
               <tr className="text-center">
                 <td className="border-b border-slate-200 p-4 pl-8 ">
                   {item.Marca}

@@ -1,16 +1,42 @@
 import React, { SetStateAction } from "react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 import { Buttons } from "./Button";
 import { TextInput } from "./TextInput";
 
 export interface CarData {
+  carId?: string;
   Marca: string;
   Modelo: string;
   Cor: string;
   anoFabricacao: number;
   anoModelo: number;
   tipoCambio: "automático" | "manual";
+}
+
+async function handleResponse(resp: any) {
+  if (resp.ok) {
+    toast.success("Carro criado", {
+      position: "bottom-center",
+      autoClose: 10000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  } else {
+    toast.error("Error", {
+      position: "bottom-center",
+      autoClose: 10000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  }
 }
 
 function FormCadastro() {
@@ -22,23 +48,24 @@ function FormCadastro() {
     anoModelo: 0,
     tipoCambio: "manual",
   });
+  const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
-    fetch(`/events`, {
-      credentials: "include",
+
+    await fetch(`http://localhost:5678/consulta`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(event),
-    });
-    console.log(data);
+      body: JSON.stringify(data),
+    }).then(handleResponse);
 
     setLoading(false);
   };
+  console.log(err);
   return (
     <>
       <form
@@ -124,12 +151,14 @@ function FormCadastro() {
             <TextInput.Input
               type={"radio"}
               value={"automático"}
+              data-testid={"automático"}
               onChange={(event: any) =>
                 setData({ ...data, tipoCambio: event.target.value })
               }
               id="automatico"
               className="peer/automatico form-radio mr-2 mb-0.5 border-slate-300 text-sky-400 focus:ring-sky-300"
               name="status"
+              required
             />
             <label
               htmlFor="automatico"
@@ -140,12 +169,14 @@ function FormCadastro() {
             <TextInput.Input
               type={"radio"}
               value={"manual"}
+              data-testid={"manual"}
               onChange={(event: any) =>
                 setData({ ...data, tipoCambio: event.target.value })
               }
               id="manual"
               className="peer/manual form-radio mr-2 mb-0.5 ml-4 border-slate-300 text-sky-400 focus:ring-sky-300"
               name="status"
+              required
             />
             <label
               htmlFor="manual"

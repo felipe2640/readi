@@ -1,4 +1,4 @@
-import React, { ComponentProps, ReactNode } from "react";
+import React, { ButtonHTMLAttributes } from "react";
 import { Icon, IconProps } from "@iconify/react";
 import { RootProps } from "./TextInput";
 
@@ -13,20 +13,22 @@ function ButtonSubmit(props: RootProps) {
   );
 }
 
-interface ButtonIndexProsp extends RootProps {
-  isModelcar: boolean;
+interface ButtonIndexProsp extends ButtonHTMLAttributes<HTMLButtonElement> {
+  ismodel: any;
+  text: string;
 }
 
-function ButtonsIndex({ isModelcar, children }: ButtonIndexProsp) {
+function ButtonsIndex(props: ButtonIndexProsp) {
   return (
     <button
       className={
-        isModelcar
-          ? "-mb-px border-b border-current p-4 text-cyan-500"
-          : "-mb-px border-b border- p-4 hover:text-cyan-500"
+        props.ismodel
+          ? "-mb-px border-b border-current p-4 text-teal-500"
+          : "-mb-px border-b border- p-4 hover:text-teal-500"
       }
+      {...props}
     >
-      {children}
+      {props.text}
     </button>
   );
 }

@@ -1,48 +1,32 @@
-import express from "express";
-import cors from "cors";
-import winston from "winston";
+import * as cors from "cors";
+import * as express from "express";
 import { check, validationResult } from "express-validator";
-import clientsRouter from "./routes/client.route.js";
-import productsRoute from "./routes/product.route.js";
-import salesRoute from "./routes/sale.route.js";
-import suppliersRouter from "./routes/supplier.route.js";
 
-const { combine, timestamp, label, printf } = winston.format;
+import Car from "./Car";
+import Consultar from "./consulta";
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-  return `${timestamp} [${label}] ${level} ${message}`;
-});
-
-global.logger = winston.createLogger({
-  level: "silly",
-  transports: [
-    new winston.transports.Console(),
-    new winston.transports.File({ filename: "./log/store-api.log" }),
-  ],
-  format: combine(label({ label: "store-api" }), timestamp(), myFormat),
-});
 const app = express();
 
 app.use(express.json());
 app.use(cors());
-app.use("/client", clientsRouter);
-app.use("/product", productsRoute);
-app.use("/sale", salesRoute);
-app.use("/supplier", suppliersRouter);
-app.use((err, req, res, next) => {
-  logger.error(`${req.method} ${req.baseUrl} - ${err.message}`);
-  res.status(400).send({ error: err.message });
+
+app.get("/", async (req, res) => {
+  res.status(200).send("Bootcamp node");
 });
-app.listen(3000, () => console.log("Api Started "));
 
 app.post(
-  "/consulta-credito",
-  check("nome", "Nome deve ser informado").notEmpty(),
-  check("CPF", "CPF deve ser informado").notEmpty(),
-  check("valor", "O valor deve ser um número").notEmpty().isFloat(),
-  check("parcelas", "O número de parcelas deve ser um número inteiro")
+  "/consulta",
+  check("Marca", "Marca deve ser informado").notEmpty(),
+  check("Modelo", "Modelo deve ser informado").notEmpty(),
+  check("Cor", "A cor deve ser informado").notEmpty(),
+  check("anoFabricacao", "O ano de fabricação deve ser informado")
     .notEmpty()
     .isInt(),
+  check("anoModelo", "O ano do modelo deve ser informado").notEmpty().isInt(),
+  check(
+    "tipoCambio",
+    "O número de parcelas deve ser um número inteiro"
+  ).notEmpty(),
 
   async (req, res) => {
     const erros = validationResult(req);
@@ -51,11 +35,13 @@ app.post(
     }
 
     try {
-      const valores = await consultaCliente.consultar(
-        req.body.nome,
-        req.body.CPF,
-        req.body.valor,
-        req.body.parcelas
+      const valores = await Consultar(
+        req.body.Marca.toLowerCase(),
+        req.body.Modelo.toLowerCase(),
+        req.body.Cor.toLowerCase(),
+        req.body.anoFabricacao,
+        req.body.anoModelo,
+        req.body.tipoCambio.toLowerCase()
       );
       return res.status(201).json(valores);
     } catch (erro) {
@@ -63,3 +49,10 @@ app.post(
     }
   }
 );
+
+app.get("/Cars", async (req, res) => {
+  const Cars = await Car.findAll();
+  return res.status(200).json(Cars);
+});
+
+export default app;
