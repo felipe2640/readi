@@ -11,10 +11,6 @@ const Consultar = async (
   let carro = await Carro.findAll({
     where: {
       Modelo,
-      Cor,
-      anoFabricacao,
-      anoModelo,
-      tipoCambio,
     },
   });
 
