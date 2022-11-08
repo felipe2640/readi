@@ -7,7 +7,7 @@
     "test": "jest",
     "build": "tsc --build",
     "start": "nodemon ./src/server.ts",
-    "start:prod": "node dist/server.js",
+    "start:prod": "node built/server.js",
     "lint": "eslint \"**/*.{ts,tsx,js,jsx,snap}\" --fix "
   },
   "keywords": [],
