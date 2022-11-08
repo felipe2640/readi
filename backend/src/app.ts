@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", async (req, res) => {
-  res.status(200).send("Bootcamp node");
+  res.status(200).send("Readi Test");
 });
 
 app.post(
