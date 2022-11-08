@@ -55,7 +55,7 @@ const ModelCar = () => {
             />
           </TextInput.Root>
         </div>
-        <div className="grid grid-cols-3 bg-gray-100 text-center justify-center">
+        <div className="grid grid-row-2 bg-gray-100 text-center justify-center">
           <TextInput.Root className=" ring-cyan-500 ">
             <TextInput.Input
               type={"radio"}
@@ -111,7 +111,7 @@ const ModelCar = () => {
       </div>
 
       <div className="flex content-center justify-center flex-col">
-        <table className="table-fixed">
+        <table className="table-auto">
           <thead className="bg-gray-100">
             <tr className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
               {carTH.map((item: any) => {
@@ -132,13 +132,13 @@ const ModelCar = () => {
               className="text-gray-600 bg-white justify-center"
             >
               <tr className="text-center">
-                <td className="border-b border-slate-200 p-4 pl-8 ">
+                <td className="border-b border-slate-200 p-4 pl-8 normal-case ">
                   {item.Marca}
                 </td>
-                <td className="border-b border-slate-200 p-4 pl-8 ">
+                <td className="border-b border-slate-200 p-4 pl-8 normal-case ">
                   {item.Modelo}
                 </td>
-                <td className="border-b border-slate-200 p-4 pl-8 ">
+                <td className="border-b border-slate-200 p-4 pl-8 normal-case ">
                   {item.Cor}
                 </td>
                 <td className="border-b border-slate-200 p-4 pl-8 ">
@@ -147,7 +147,7 @@ const ModelCar = () => {
                 <td className="border-b border-slate-200 p-4 pl-8 ">
                   {item.anoModelo}
                 </td>
-                <td className="border-b border-slate-200 p-4 pl-8 ">
+                <td className="border-b border-slate-200 p-4 pl-8 normal-case ">
                   {item.tipoCambio}
                 </td>
               </tr>
