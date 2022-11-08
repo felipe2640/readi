@@ -48,14 +48,14 @@ function FormCadastro() {
     anoModelo: 0,
     tipoCambio: "manual",
   });
-  const [err, setErr] = useState("");
+
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    await fetch(`http://localhost:5678/consulta`, {
+    await fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/consulta`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,11 +65,11 @@ function FormCadastro() {
 
     setLoading(false);
   };
-  console.log(err);
+
   return (
     <>
       <form
-        className="flex flex-col  items-stretch gap-4 w-full max-w-sm "
+        className="flex flex-col  items-stretch gap-4 w-full max-w-sm"
         onSubmit={handleLogin}
       >
         <div className="grid grid-flow-col-dense justify-center grid-cols-2 gap-3 grid-rows-3">

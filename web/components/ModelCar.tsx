@@ -20,7 +20,7 @@ const ModelCar = () => {
     "Tipo de Cambio",
   ];
   useEffect(() => {
-    fetch(`http://localhost:5678/Cars`)
+    fetch(`${process.env.NEXT_PUBLIC_DB_HOST}/Cars`)
       .then((resp) => resp.json())
       .then(setData);
   }, []);
